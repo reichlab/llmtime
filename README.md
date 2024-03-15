@@ -43,6 +43,7 @@ echo "export MISTRAL_KEY=<your key>" >> ~/.bashrc
 
 ## 💡 Tips 
 Here are some tips for using LLMTime:
+- If you don't want to add OpenAI and Mistral keys to `~/.bashrc` or other dotfiles, you can add them to `.env-example` and rename the file to `.env` (which is in `.gitignore`). The demo code will add the contents of `.env` to your session's environment variables.
 - Performance is not too sensitive to the data scaling hyperparameters `alpha, beta, basic`. A good default is `alpha=0.95, beta=0.3, basic=False`. For data exhibiting symmetry around 0 (e.g. a sine wave), we recommend setting `basic=True` to avoid shifting the data.
 - The recently released `gpt-3.5-turbo-instruct` seems to require a lower temperature (e.g. 0.3) than other models, and tends to not outperform `text-davinci-003` from our limited experiments.
 - Tuning hyperparameters based on validation likelihoods, as done by `get_autotuned_predictions_data`, will often yield better test likelihoods, but won't necessarily yield better samples. 

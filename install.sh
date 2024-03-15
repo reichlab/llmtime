@@ -17,4 +17,5 @@ pip install SentencePiece
 pip install accelerate
 pip install gdown
 pip install mistralai #for mistral models
+pip install python-dotenv #optional convenience for handling environment variables
 conda deactivate
