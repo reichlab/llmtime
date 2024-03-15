@@ -1,7 +1,7 @@
 conda create -n llmtime python=3.9
 conda activate llmtime
 pip install numpy
-pip install -U jax[cpu] # we don't need GPU for jax
+pip install -U "jax[cpu]" # we don't need GPU for jax
 pip install torch --index-url https://download.pytorch.org/whl/cu118
 pip install openai==0.28.1
 pip install tiktoken
