@@ -20,7 +20,7 @@ conda activate llmtime
 ```
 If you prefer not using conda, you can also install the dependencies listed in `install.sh` manually. 
 
-Add your openai api key to `~/.bashrc` with
+If you want to run OpenAI models through their API (doesn't require access to a GPU), add your openai api key to `~/.bashrc` with
 ```
 echo "export OPENAI_API_KEY=<your key>" >> ~/.bashrc
 ```
@@ -34,10 +34,16 @@ echo "export OPENAI_API_BASE=<your base url>" >> ~/.bashrc
 Want a quick taste of the power of LLMTime? Run the quick demo in the `demo.ipynb` notebook. No GPUs required!
 
 ## 🤖 Plugging in other LLMs
-We currently support GPT-3, GPT-3.5, GPT-4, and LLaMA 2. It's easy to plug in other LLMs by simply specifying how to generate text completions from them in `models/llms.py`.
+We currently support GPT-3, GPT-3.5, GPT-4, Mistral, and LLaMA 2. It's easy to plug in other LLMs by simply specifying how to generate text completions from them in `models/llms.py`.
+
+To run Mistral models, add your mistral api key to `~/.bashrc` with
+```
+echo "export MISTRAL_KEY=<your key>" >> ~/.bashrc
+```
 
 ## 💡 Tips 
 Here are some tips for using LLMTime:
+- If you don't want to add OpenAI and Mistral keys to `~/.bashrc` or other dotfiles, you can add them to `.env-example` and rename the file to `.env` (which is in `.gitignore`). The demo code will add the contents of `.env` to your session's environment variables.
 - Performance is not too sensitive to the data scaling hyperparameters `alpha, beta, basic`. A good default is `alpha=0.95, beta=0.3, basic=False`. For data exhibiting symmetry around 0 (e.g. a sine wave), we recommend setting `basic=True` to avoid shifting the data.
 - The recently released `gpt-3.5-turbo-instruct` seems to require a lower temperature (e.g. 0.3) than other models, and tends to not outperform `text-davinci-003` from our limited experiments.
 - Tuning hyperparameters based on validation likelihoods, as done by `get_autotuned_predictions_data`, will often yield better test likelihoods, but won't necessarily yield better samples. 
