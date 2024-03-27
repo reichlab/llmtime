@@ -144,6 +144,7 @@ test = np.power(test, 1/4)
 
 ## work on data pipeline, standardize ways to extract/filter data
 ## code up output file to match "hub" output
+## run more samples
 
 
 out = {}
