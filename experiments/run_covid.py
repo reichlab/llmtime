@@ -131,9 +131,9 @@ model_hypers = {
 model_predict_fns = {
     #'LLMA2': get_llmtime_predictions_data, ## had an issue with loading tokenizer
     #'mistral': get_llmtime_predictions_data, ## was too slow and didn't work
-    # "LLMTime GPT-4": get_llmtime_predictions_data, ## exceeded current quota
+    "LLMTime GPT-4": get_llmtime_predictions_data, ## exceeded current quota
     #'mistral-api-tiny': get_llmtime_predictions_data
-    # "LLMTime GPT-3.5": get_llmtime_predictions_data, ## exceeded current quota
+    "LLMTime GPT-3.5": get_llmtime_predictions_data, ## exceeded current quota
     #'PromptCast GPT-3': get_promptcast_predictions_data, ## davinci-003 was deprecated
     "ARIMA": get_arima_predictions_data,
 }
