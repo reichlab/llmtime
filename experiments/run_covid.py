@@ -130,12 +130,12 @@ model_hypers = {
 
 model_predict_fns = {
     #'LLMA2': get_llmtime_predictions_data, ## had an issue with loading tokenizer
-    'mistral': get_llmtime_predictions_data,
-    'LLMTime GPT-4': get_llmtime_predictions_data,
+    #'mistral': get_llmtime_predictions_data, ## was too slow and didn't work
+    # "LLMTime GPT-4": get_llmtime_predictions_data, ## exceeded current quota
     #'mistral-api-tiny': get_llmtime_predictions_data
-    "LLMTime GPT-3.5": get_llmtime_predictions_data,
-    #'PromptCast GPT-3': get_promptcast_predictions_data,
-    #'ARIMA': get_arima_predictions_data,
+    # "LLMTime GPT-3.5": get_llmtime_predictions_data, ## exceeded current quota
+    #'PromptCast GPT-3': get_promptcast_predictions_data, ## davinci-003 was deprecated
+    "ARIMA": get_arima_predictions_data,
 }
 
 
@@ -153,10 +153,17 @@ full_data = pd.read_csv(
 )
 ds_name = "CovidHospDataset"
 us_data = full_data.query("location == 'US'")
+us_data.set_index("date", inplace=True)
+pd.to_datetime(us_data.index)
 
-## TODO: add start of for loop over forecast dates 
-train = us_data["value"][:-60]  # beginning to last 60 rows
-test = us_data["value"][-60:]  # last 60 rows to end
+## TODO: add start of for loop over forecast dates
+# train = us_data["value"][:-60]  # beginning to last 60 rows
+# test = us_data["value"][-60:]  # last 60 rows to end
+
+train = us_data.iloc[: int(len(us_data) * 0.8)]  # 80% of data
+train = train["value"]
+test = us_data.iloc[int(len(us_data) * 0.8) :]  # 20% of data
+test = test["value"]
 
 ## transform data using fourth root
 train = np.power(train, 1 / 4)
@@ -164,14 +171,15 @@ test = np.power(test, 1 / 4)
 
 ## running more samples
 ## get other models running
-  ## LLAMA didn't work
-  ## mistral took a long time to load (will it do that every time?)
-  ## gpt-4 worked out of the box
+## LLAMA didn't work
+## mistral took a long time to load (will it do that every time?)
+## gpt-4 worked out of the box
+## gpt-3 was deprecated
 ## work on data pipeline, standardize ways to extract/filter data
-  ## relabeling the index/Date column for the series
-  ## create for loop over different times
-  ## save output to files
-  ## create a hub directory set-up within the project
+## relabeling the index/Date column for the series
+## create for loop over different times
+## save output to files
+## create a hub directory set-up within the project
 ## code up output file to match "hub" output
 ## run more samples
 
