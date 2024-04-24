@@ -131,9 +131,9 @@ model_hypers = {
 model_predict_fns = {
     #'LLMA2': get_llmtime_predictions_data, ## had an issue with loading tokenizer
     #'mistral': get_llmtime_predictions_data, ## was too slow and didn't work
-    "LLMTime GPT-4": get_llmtime_predictions_data, ## exceeded current quota
+    "LLMTime GPT-4": get_llmtime_predictions_data,  ## exceeded current quota
     #'mistral-api-tiny': get_llmtime_predictions_data
-    "LLMTime GPT-3.5": get_llmtime_predictions_data, ## exceeded current quota
+    "LLMTime GPT-3.5": get_llmtime_predictions_data,  ## exceeded current quota
     #'PromptCast GPT-3': get_promptcast_predictions_data, ## davinci-003 was deprecated
     "ARIMA": get_arima_predictions_data,
 }
@@ -188,7 +188,7 @@ out = {}
 for model in model_names:  # GPT-4 takes a about a minute to run
     model_hypers[model].update({"dataset_name": ds_name})  # for promptcast
     hypers = list(grid_iter(model_hypers[model]))
-    num_samples = 10
+    num_samples = 6
     pred_dict = get_autotuned_predictions_data(
         train,
         test,
