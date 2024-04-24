@@ -21,7 +21,7 @@ from models.llmtime import get_llmtime_predictions_data
 plt.style.use("ggplot")
 
 
-def plot_preds(train, test, pred_dict, model_name, show_samples=False):
+def plot_preds(train, test, pred_dict, model_name, filename, show_samples=False):
     pred = pred_dict["median"]
     pred = pd.Series(pred, index=test.index)
     plt.figure(figsize=(8, 6), dpi=100)
@@ -53,7 +53,7 @@ def plot_preds(train, test, pred_dict, model_name, show_samples=False):
                 transform=plt.gca().transAxes,
                 bbox=dict(facecolor="white", alpha=0.5),
             )
-    plt.show()
+    plt.savefig(filename)
 
 
 print(torch.cuda.max_memory_allocated())
@@ -130,12 +130,12 @@ model_hypers = {
 
 model_predict_fns = {
     #'LLMA2': get_llmtime_predictions_data, ## had an issue with loading tokenizer
-    'mistral': get_llmtime_predictions_data,
-    'LLMTime GPT-4': get_llmtime_predictions_data,
-    #'mistral-api-tiny': get_llmtime_predictions_data
-    "LLMTime GPT-3.5": get_llmtime_predictions_data,
-    #'PromptCast GPT-3': get_promptcast_predictions_data,
-    #'ARIMA': get_arima_predictions_data,
+    #'mistral': get_llmtime_predictions_data, ## takes forever to run, actually seems to run the LLM locally
+    #'LLMTime GPT-4': get_llmtime_predictions_data, ## works
+    #'mistral-api-tiny': get_llmtime_predictions_data, ## need MISTRAL_KEY
+    'LLMTime GPT-3.5': get_llmtime_predictions_data, ## works
+    #'PromptCast GPT-3': get_promptcast_predictions_data, ## get error about text-davinci-003 deprecated
+    #'ARIMA': get_arima_predictions_data, ## works
 }
 
 
@@ -193,5 +193,5 @@ for model in model_names:  # GPT-4 takes a about a minute to run
     pred_dict["samples"] = np.power(pred_dict["samples"], 4)
     out[model] = pred_dict
     plot_preds(
-        np.power(train, 4), np.power(test, 4), pred_dict, model, show_samples=True
+        np.power(train, 4), np.power(test, 4), pred_dict, model, filename = "tmp.png", show_samples=True
     )
