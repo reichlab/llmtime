@@ -156,19 +156,6 @@ us_data = full_data.query("location == 'US'")
 us_data.set_index("date", inplace=True)
 pd.to_datetime(us_data.index)
 
-## TODO: add start of for loop over forecast dates
-# train = us_data["value"][:-60]  # beginning to last 60 rows
-# test = us_data["value"][-60:]  # last 60 rows to end
-
-train = us_data.iloc[: int(len(us_data) * 0.8)]  # 80% of data
-train = train["value"]
-test = us_data.iloc[int(len(us_data) * 0.8) :]  # 20% of data
-test = test["value"]
-
-## transform data using fourth root
-train = np.power(train, 1 / 4)
-test = np.power(test, 1 / 4)
-
 ## running more samples
 ## get other models running
 ## LLAMA didn't work
@@ -183,13 +170,20 @@ test = np.power(test, 1 / 4)
 ## code up output file to match "hub" output
 ## run more samples
 
+for x in range(-200, -180, 20):
+  train = us_data["value"][:x]  # beginning to last x rows
+  test = us_data["value"][x:]  # last x rows to end
+  
+  ## transform data using fourth root
+  train = np.power(train, 1 / 4)
+  test = np.power(test, 1 / 4)
 
-out = {}
-for model in model_names:  # GPT-4 takes a about a minute to run
-    model_hypers[model].update({"dataset_name": ds_name})  # for promptcast
-    hypers = list(grid_iter(model_hypers[model]))
-    num_samples = 6
-    pred_dict = get_autotuned_predictions_data(
+  out = {}
+  for model in model_names:  # GPT-4 takes a about a minute to run
+      model_hypers[model].update({"dataset_name": ds_name})  # for promptcast
+      hypers = list(grid_iter(model_hypers[model]))
+      num_samples = 10
+      pred_dict = get_autotuned_predictions_data(
         train,
         test,
         hypers,
@@ -197,9 +191,11 @@ for model in model_names:  # GPT-4 takes a about a minute to run
         model_predict_fns[model],
         verbose=False,
         parallel=False,
-    )
-    pred_dict["samples"] = np.power(pred_dict["samples"], 4)
-    out[model] = pred_dict
-    plot_preds(
-        np.power(train, 4), np.power(test, 4), pred_dict, model, filename = "tmp.png", show_samples=True
-    )
+      )
+      pred_dict["samples"] = np.power(pred_dict["samples"], 4)
+      out[model] = pred_dict
+      tmp_filename = "experiments/figures/" +model + str(x) + ".png"
+      plot_preds(
+        np.power(train, 4), np.power(test, 4), pred_dict, model, filename=tmp_filename, show_samples=True
+      )
+
